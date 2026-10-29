@@ -1,0 +1,54 @@
+name: CI/CD Pipeline & Native Release Build
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-and-build:
+    name: Headless Verification & Standalone x64 Build
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js for Headless Test Harness
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run Headless Jyotish & Security Verification
+        run: |
+          node tests/test_muhurtham_engine.js
+
+      - name: Execute Native x64 Packaging & Verification Pipeline
+        shell: powershell
+        run: |
+          powershell -ExecutionPolicy Bypass -File .\verify_build_pipeline.ps1
+
+      - name: Verify SHA-256 Checksum
+        shell: powershell
+        run: |
+          $expected = (Get-Content .\BharatAstrologyMuhurtham.exe.sha256).Split(" ")[0].Trim()
+          $actual = (Get-FileHash .\BharatAstrologyMuhurtham.exe -Algorithm SHA256).Hash
+          if ($expected -ne $actual) {
+              Write-Error "Checksum mismatch! Expected $expected but got $actual"
+              exit 1
+          }
+          Write-Host "Checksum verified: $actual" -ForegroundColor Green
+
+      - name: Archive Native Executable & Checksum Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: BharatAstrologyMuhurtham-x64
+          path: |
+            BharatAstrologyMuhurtham.exe
+            BharatAstrologyMuhurtham.exe.sha256
+          if-no-files-found: error

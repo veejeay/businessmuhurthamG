@@ -1,0 +1,14 @@
+# Build temporaries
+runner_build_temp.cs
+runner_temp.cs
+*.tmp
+*.log
+
+# User profile cache (created during local runtime testing)
+UserData/
+Profile/
+
+# OS metadata
+Thumbs.db
+Desktop.ini
+.DS_Store
