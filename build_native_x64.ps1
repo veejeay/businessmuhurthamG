@@ -189,7 +189,7 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 
 [assembly: AssemblyTitle("BharatAstrology.org Muhurtham Calculation Engine")]
-[assembly: AssemblyDescription("Commercial Muhurtham & Electional Astrology Calculation Engine")]
+[assembly: AssemblyDescription("Commercial Muhurtham & Electional Astrology Calculation Engine - Source: https://github.com/veejeay/businessmuhurthamG")]
 [assembly: AssemblyCompany("BharatAstrology.org")]
 [assembly: AssemblyProduct("BharatAstrology Muhurtham Desktop")]
 [assembly: AssemblyCopyright("Copyright © 2026 BharatAstrology.org")]
